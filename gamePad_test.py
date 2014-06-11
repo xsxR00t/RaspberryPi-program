@@ -30,16 +30,17 @@ def main():
 				else:
 					GPIO.output( 17, False )
 				print "Down at %s" % str( e.button )
-                        '''
-                        elif e.type == pygame.locals.JOYAXISMOTTION:
-				( x, y, x1, y1 ) = joys.get_axis(0), joys.get_axis(1), joys.get_axis(2), joys.get_axis(3)
-				print "x, y = (%f, %f) (%f, %f)" % (x, y, x1, y1)
+
+			elif e.type == pygame.locals.JOYBUTTONUP:
+				print "Up at %s" % str( e.button )
 
 			elif e.type == pygame.locals.JOYHATMOTION:
-				( x, y ) = joys.get_hat(0)
-				print "Hat Motion %d" % ( e.button )
-			'''
+				print 'hat motion'
 
+			elif e.type == pygame.locals.JOYAXISMOTION:
+				x , y = j.get_axis(0), j.get_axis(1)
+                print 'x and y : ' + str(x) + ' , ' + str(y)
+	
 if __name__ == '__main__':
 	gpioInit()
 	pygame.joystick.init()
