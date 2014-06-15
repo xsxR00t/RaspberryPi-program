@@ -5,19 +5,18 @@
 import smbus
 import time
 
-bus = smbus.SMBus(1)
-
 class I2cConnects:
+	bus = smbus.SMBus(1)
+
 	def __init__(self, address):
 		# Target address
 		self.address = address
 
 	def writeData(self, data):
-		bus.write_byte( self.address, data )
+		self.bus.write_byte( self.address, data )
 
 	def readData(self):
-		rcv = bus.read_byte( self.address )
-		return rcv
+		return self.bus.read_byte( self.address )
 
 def main():
 	cnt1 = I2cConnects(0x0a)
