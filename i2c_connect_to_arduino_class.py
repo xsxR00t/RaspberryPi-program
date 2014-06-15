@@ -19,29 +19,25 @@ class I2cConnects:
 		return self.bus.read_byte( self.address )
 
 def main():
-	cnt1 = I2cConnects(0x0a)
-	cnt2 = I2cConnects(0x0c)
+	i2cList = []
+	i2cList.append( I2cConnects(0x0a) )
+	i2cList.append( I2cConnects(0x0c) )
 
 	while True:
-		var = input("Enter number1 : ")
-		if not var:
-			continue
+		for slave in i2cList:
+			var = input("Enter number (to slave address(" + hex(slave.address) + ") :")
+			if not var:
+				continue
+			
+			# Send data
+			slave.writeData( var )
+			print "RPI -> arduino(" + hex(slave.address) + " : %d" % var
+			time.sleep(1)
 
-		var2 = input("Enter number2 : ")
-		if not var2:
-			continue
-
-		# Send data
-		cnt1.writeData(var)
-		cnt2.writeData(var2)
-		print "RPI -> arduino(%d) : %d" % (cnt1.address, var)
-		print "RPI -> arduino(%d) : %d" % (cnt2.address, var2)
-		time.sleep(1)
-
-		# Read data
-		print "Arduino(%d) -> RPI : %d" % (cnt1.address, cnt1.readData())
-		print "Arduino(%d) -> RPI : %d" % (cnt2.address, cnt2.readData())
-		print
+			# Read data
+			print "Arduino(" + hex(slave.address) + ") -> RPI : %d" % slave.readData()
+			print
+			
 
 if __name__ == '__main__':
 	main()
