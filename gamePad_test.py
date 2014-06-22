@@ -30,10 +30,10 @@ def main():
 				else:
 					GPIO.output( 17, False )
 				print "Down at %s" % str( e.button )
-
+			
 			elif e.type == pygame.locals.JOYBUTTONUP:
-				print "Up at %s" % str( e.button )
-
+				 print "Up at %s" % str( e.button )
+			
 			elif e.type == pygame.locals.JOYHATMOTION:
 				( x, y ) = joys.get_hat(0)
 				print 'hat motion %d %d' % ( x, y )
