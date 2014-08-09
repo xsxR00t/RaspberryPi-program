@@ -27,8 +27,7 @@ def main():
 		for slave in i2cList:
 			var = input("Enter number (to slave address(" + hex(slave.address) + ") :")
 			if not var:
-				continue
-			
+				continue			
 			# Send data
 			slave.writeData( var )
 			print "RPI -> arduino(" + hex(slave.address) + " : %d" % var

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/pytho= n
 # encoding: utf-8
 
 import pygame
@@ -27,7 +27,7 @@ def main():
     initIO()
 #    joys = pygame.joystick.Joystick(0)
 #    joys.init()
-    pygame.init()
+    pygame==.init()
 
     motor1 = I2cConnection(I2C_MOTOR1,1)
     motor2 = I2cConnection(I2C_MOTOR2,2)
