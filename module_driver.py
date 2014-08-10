@@ -15,7 +15,7 @@ I2C_SERVO1 = 0x20
 I2C_SERVO2 = 0x21
 
 def initIO():
-    GPIO.setmode(GPIO.BCM)
+	GPIO.setmode(GPIO.BCM)
 #    GPIO.setup(17, GPIO.OUT)
 #    GPIO.setup(22, GPIO.OUT)
 #    GPIO.setup(27, GPIO.OUT)
