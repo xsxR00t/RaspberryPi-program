@@ -16,17 +16,17 @@ class I2CConnect :
     ''' スレーブにデータを送信します．
     @param *data 送信するデータ
     '''
-    def writeDate( self, *data ) :
+    def write_data( self, *data ) :
         self.bus.write_i2c_block_data( self.address, 0x00, list(data[0:]) )
         print "Write!"
 
     ''' スレーブからデータを受信します．(スレーブに送信リクエストを送ります．)
     @param byteCount 受信するデータ量(bytes), default=1
     '''
-    def readDate( self, byteCount = 1 ) :
+    def read_data( self, byteCount = 1 ) :
         return self.bus.read_i2c_block_data(self.address, 0x00, byteCount)
 
-    def isValidate(self):
+    def is_validate(self):
         if self.address <= 0 or self.address > 255:
             raise IndexError("I2C address must be an integer from 1 to 255. The specified number %s is invalid" % self.address)
 
@@ -51,9 +51,9 @@ if __name__ == '__main__':
 
     import random, time
     i2c = I2CConnect(address)
-    sendDataList = [random.randint(1, 255) for i in range(SEND_DATA_LENGTH)]
-    print "Send to %d, %s" % (i2c.address, sendDataList)
-    i2c.writeDate(*sendDataList)
+    send_data_list = [random.randint(1, 255) for i in range(SEND_DATA_LENGTH)]
+    print "Send to %d, %s" % (i2c.address, send_data_list)
+    i2c.write_date(*send_data_list)
     time.sleep(0.1)
-    readDataList = i2c.readDate(4)
-    print "Read data from slave %d, %s" % (i2c.address, readDataList)
+    read_data_list = i2c.read_data(4)
+    print "Read data from slave %d, %s" % (i2c.address, read_data_list)
