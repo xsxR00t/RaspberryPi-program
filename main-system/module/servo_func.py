@@ -16,10 +16,10 @@ def limit( param ) :
 		return param
 
 def servo_move( target, angle ) :
-	target.write( limit( angle ) )
-	
+	target.write_data( limit( angle ) )
+
 def servo_move_r( target, angle ) :
-	target.write( limit( angle ) )
+	target.write_data( limit( angle ) )
 
 def test() :
 	print "test"
