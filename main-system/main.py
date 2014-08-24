@@ -13,6 +13,7 @@ import logging
 
 # User program
 from module.motor_func import *
+from module.servo_func import *
 from module.i2c_class import I2CConnect
 
 PID_FILE = '/var/run/catchrobot.pid'
@@ -26,7 +27,9 @@ ADDRESS_SERVO2   = 0x21
 MOTOR_MOVE = 0
 MOTOR_MOVE_R = 1
 SERVO_MOVE = 2
-SERVO_MOVE = 3
+SERVO_MOVE_R = 3
+
+modules = {}
 
 modules = {}
 
@@ -56,6 +59,16 @@ def main_routine( cmd ) :
         print modules['motor1'].read_data(3)
     elif cmd == MOTOR_MOVE*(-1)+(-1) :
         motor_move_r(0,0)
+    elif cmd == SERVO_MOVE:
+        angle = 135
+        print "turn to %d angle." % angle
+        servo_move(modules['servo1'], angle)
+        servo_move(modules['servo2'], angle)
+    elif cmd == SERVO_MOVE_R:
+        angle = 45
+        print "turn to %d angel." % angle
+        servo_move(modules['servo1'], angle)
+        servo_move(modules['servo2'], angle)
     else :
         print "Motor stop"
 
@@ -69,9 +82,9 @@ def main():
     # uno = I2CConnect(ADDRESS_UNO)
     motor1 = I2CConnect( ADDRESS_MOTOR1 )
     # motor2 = i2cConnection( ADDRESS_MOTOR2, 3 )
-    # servo1 = i2cConnection( ADDRESS_SERVO1, 4 )
-    # servo2 = i2cConnection( ADDRESS_SERVO2, 5 )
-    modules.update({'motor1': motor1})
+    servo1 = I2CConnect( ADDRESS_SERVO1 )
+    servo2 = I2CConnect( ADDRESS_SERVO2 )
+    modules.update({'motor1': motor1, 'servo1': servo1, 'servo2': servo2})
     logging.info("Initialize I2C communication to modules [OK]")
 
     # Receive controller keys
