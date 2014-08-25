@@ -7,6 +7,7 @@ from settings import *
 from module.i2c_class import *
 from module.motor_func import *
 from module.servo_func import *
+import logging
 
 forth_back_motor_signal = MotorSignal()
 up_down_motor_signal = MotorSignal()
@@ -15,6 +16,14 @@ suicide_hand_servo = 90
 suicide_arm_servo = 90
 air_cylinder_oc_servo = AIR_CYLINDER_CLOSE_ANGLE
 air_cylinder_expand_servo = AIR_CYLINDER_CLOSE_ANGLE
+
+# I2C initialize
+motor1 = I2CConnect( I2C_ADDRESS['MOTOR1'] )
+# motor2 = i2cConnection( ADDRESS_MOTOR2, 3 )
+servo1 = I2CConnect( I2C_ADDRESS['SERVO1'] )
+servo2 = I2CConnect( I2C_ADDRESS['SERVO2'] )
+modules.update({'motor1': motor1, 'servo1': servo1, 'servo2': servo2})
+logging.info("Initialize I2C communication to modules [OK]")
 
 def open_suicide_hand():
     suicide_arm_servo = SUICIDE_HAND_OPEN_ANGLE

@@ -45,20 +45,27 @@ def init_controller() :
 
 ''' ゲームパッドのボタンが押されたときのイベント処理 '''
 def pushed_event(event):
+    print event.button
     if event.button == PAD_BUTTON['LINE_HAND_OC'] :
+        print "line hand open"
         open_line_hand()
     elif event.button == PAD_BUTTON['SUICIDE_HAND_OC'] :
+        print "suicide hand open"
         open_suicide_hand()
     elif event.button == PAD_BUTTON['INITIALIZE'] :
+        print "initialize"
         pass
     elif event.button == PAD_BUTTON['RETRY'] :
+        print "retry"
         pass
 
 ''' ゲームパッドのボタンが離されたときのイベント処理 '''
 def released_event(event):
     if event.button == PAD_BUTTON['LINE_HAND_OC'] :
+        print "line hand close"
         close_line_hand()
     elif event.button == PAD_BUTTON['SUICIDE_HAND_OC'] :
+        print "suicide hand close"
         close_suicide_hand()
 
 ''' ゲームパッドの十時キーのイベント処理 '''
@@ -93,12 +100,12 @@ def main():
 
     # I2C initialize
     # uno = I2CConnect(ADDRESS_UNO)
-    motor1 = I2CConnect( I2C_ADDRESS['MOTOR1'] )
+    #motor1 = I2CConnect( I2C_ADDRESS['MOTOR1'] )
     # motor2 = i2cConnection( ADDRESS_MOTOR2, 3 )
-    servo1 = I2CConnect( I2C_ADDRESS['SERVO1'] )
-    servo2 = I2CConnect( I2C_ADDRESS['SERVO2'] )
-    modules.update({'motor1': motor1, 'servo1': servo1, 'servo2': servo2})
-    logging.info("Initialize I2C communication to modules [OK]")
+    #servo1 = I2CConnect( I2C_ADDRESS['SERVO1'] )
+    #servo2 = I2CConnect( I2C_ADDRESS['SERVO2'] )
+    #modules.update({'motor1': motor1, 'servo1': servo1, 'servo2': servo2})
+    #logging.info("Initialize I2C communication to modules [OK]")
 
     # Main system loop
     while True :
@@ -114,7 +121,6 @@ def main():
                     hat_event(e)
                 elif e.type == pygame.locals.JOYAXISMOTION and e.joy == JOYSTICK_NUMBER:
                     axis_event(e)
-
 
         except IOError as ex :
             str = "I2C Communication Failed %s" % ex

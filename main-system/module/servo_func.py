@@ -13,7 +13,7 @@ def limit( param ) :
 	elif param < 0 :
 		return 0
 	else :
-		return param
+		return int(param)
 
 def move( target, *angle ) :
 	target.write_data( *[limit(a) for a in angle] )
