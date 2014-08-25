@@ -12,22 +12,13 @@ import time
 import logging
 
 # User program
+import module
+from settings import *
+from actions import *
+from module import *
 from module.motor_func import *
 from module.servo_func import *
 from module.i2c_class import I2CConnect
-
-PID_FILE = '/var/run/catchrobot.pid'
-
-ADDRESS_UNO = 0x01
-ADDRESS_MOTOR1 = 0x10
-ADDRESS_MOTOR2 = 0x11
-ADDRESS_SERVO1   = 0x20
-ADDRESS_SERVO2   = 0x21
-
-MOTOR_MOVE = 0
-MOTOR_MOVE_R = 1
-SERVO_MOVE = 2
-SERVO_MOVE_R = 3
 
 modules = {}
 
@@ -39,38 +30,60 @@ def init_gpio() :
 def init_controller() :
     pygame.joystick.init()
     try :
-        joys = pygame.joystick.Joystick(0)
+        joys = pygame.joystick.Joystick(JOYSTICK_NUMBER)
         joys.init()
         pygame.init()
         print "Controller initialized"
         return joys
     except pygame.error :
-        print "Not found controller"
+        str = "Not found controller"
+        print str
+        logging.error(str)
         quit()
 
-def main_routine( cmd ) :
-    # Motor wake
-    if cmd == MOTOR_MOVE :
-        print "motor moving"
-        motor_move( modules['motor1'], 100, 100, 100 )
-        time.sleep(0.1)
-        print modules['motor1'].read_data(3)
-    elif cmd == MOTOR_MOVE*(-1)+(-1) :
-        motor_move_r(0,0)
-    elif cmd == SERVO_MOVE:
-        angle = 135
-        print "turn to %d angle." % angle
-        servo_move(modules['servo1'], angle)
-        servo_move(modules['servo2'], angle)
-    elif cmd == SERVO_MOVE_R:
-        angle = 45
-        print "turn to %d angel." % angle
-        servo_move(modules['servo1'], angle)
-        servo_move(modules['servo2'], angle)
-    else :
-        print "Motor stop"
+''' ゲームパッドのボタンが押されたときのイベント処理 '''
+def pushed_event(event):
+    if event.button == PAD_BUTTON['LINE_ARM_OC'] :
+        open_line_arm()
+    elif event.button == PAD_BUTTON['SUICIDE_ARM_OC'] :
+        open_suicide_arm()
+    elif event.button == PAD_BUTTON['INITIALIZE'] :
+        pass
+    elif event.button == PAD_BUTTON['RETRY'] :
+        pass
 
-    # Servo wake
+''' ゲームパッドのボタンが離されたときのイベント処理 '''
+def released_event(event):
+    if event.button == PAD_BUTTON['LINE_ARM_OC'] :
+        close_line_arm()
+    elif event.button == PAD_BUTTON['SUICIDE_ARM_OC'] :
+        close_suicide_arm()
+
+''' ゲームパッドの十時キーのイベント処理 '''
+def hat_event(event):
+    x = event.value[PAD_HAT['AIR_CYLINDER_TURN']]
+    y = event.value[PAD_HAT['AIR_CYLINDER_OC']]
+    if x == -1:
+        turn_more_air_cylinder_module(AIR_CYLINDER_MODULE_ANGLE_UNIT * -1)
+    elif x == 1:
+        turn_more_air_cylinder_module(AIR_CYLINDER_MODULE_ANGLE_UNIT)
+    else:
+        pass
+
+    if y == -1:
+        open_air_cylinder()
+    elif y == 1:
+        close_air_cylinder()
+    else:
+        pass
+
+''' ゲームパッドのスティックのイベント処理 '''
+def axis_event(event):
+    if event.axis == PAD_AXIS['LINE_ARM_BACK_FORTH']:
+        act_line_arm_forth_back(event.value)
+    elif event.axis == PAD_AXIS['LINE_ARM_UP_DOWN']:
+        act_line_arm_up_down(event.value)
+
 
 def main():
     init_gpio()
@@ -78,36 +91,37 @@ def main():
 
     # I2C initialize
     # uno = I2CConnect(ADDRESS_UNO)
-    motor1 = I2CConnect( ADDRESS_MOTOR1 )
+    motor1 = I2CConnect( I2C_ADDRESS['MOTOR1'] )
     # motor2 = i2cConnection( ADDRESS_MOTOR2, 3 )
-    servo1 = I2CConnect( ADDRESS_SERVO1 )
-    servo2 = I2CConnect( ADDRESS_SERVO2 )
+    servo1 = I2CConnect( I2C_ADDRESS['SERVO1'] )
+    servo2 = I2CConnect( I2C_ADDRESS['SERVO2'] )
     modules.update({'motor1': motor1, 'servo1': servo1, 'servo2': servo2})
     logging.info("Initialize I2C communication to modules [OK]")
 
-    # Receive controller keys
-    getCommand = None
-
-    # Main systm loop
+    # Main system loop
     while True :
         time.sleep( 0.1 )
         try :
             # Get controller event
             for e in pygame.event.get() :
-                # Button pressed
                 if e.type == pygame.locals.JOYBUTTONDOWN :
-                    getCommand = e.button
-                # Button released
+                    pushed_event(e)
                 elif e.type == pygame.locals.JOYBUTTONUP :
-                    getCommand = e.button*(-1)+(-1)
+                    released_event(e)
+                elif e.type == pygame.locals.JOYHATMOTION and e.joy == JOYSTICK_NUMBER :
+                    hat_event(e)
+                elif e.type == pygame.locals.JOYAXISMOTION and e.joy == JOYSTICK_NUMBER:
+                    axis_event(e)
 
-            # Main routine
-            main_routine( getCommand )
 
         except IOError as ex :
             str = "I2C Communication Failed %s" % ex
             logging.error(str)
             print str
+
+        except Exception as ex:
+            logging.error(ex)
+            raise ex
 
 if __name__ == "__main__":
     #with daemon.DaemonContext(pidfile=PIDLockFile(PID_FILE)):
