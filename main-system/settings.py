@@ -12,8 +12,8 @@ I2C_ADDRESS = {
 JOYSTICK_NUMBER = 0
 
 PAD_BUTTON = {
-    'LINE_ARM_OC': 4,
-    'SUICIDE_ARM_OC': 5,
+    'LINE_HAND_OC': 4,
+    'SUICIDE_HAND_OC': 5,
     'INITIALIZE': 11,
     'RETRY': 10
 }
