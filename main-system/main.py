@@ -45,7 +45,6 @@ def init_controller() :
 
 ''' ゲームパッドのボタンが押されたときのイベント処理 '''
 def pushed_event(event):
-    print event.button
     if event.button == PAD_BUTTON['LINE_HAND_OC'] :
         print "line hand open"
         open_line_hand()
@@ -70,18 +69,23 @@ def released_event(event):
 
 ''' ゲームパッドの十時キーのイベント処理 '''
 def hat_event(event):
+    print "hat event"
     x = event.value[PAD_HAT['AIR_CYLINDER_TURN']]
     y = event.value[PAD_HAT['AIR_CYLINDER_OC']]
     if x == -1:
+        print "turn air minus"
         turn_more_air_cylinder_module(AIR_CYLINDER_MODULE_ANGLE_UNIT * -1)
     elif x == 1:
+        print "turn air plus"
         turn_more_air_cylinder_module(AIR_CYLINDER_MODULE_ANGLE_UNIT)
     else:
         pass
 
     if y == -1:
+        print "open air"
         open_air_cylinder()
     elif y == 1:
+        print "close air"
         close_air_cylinder()
     else:
         pass

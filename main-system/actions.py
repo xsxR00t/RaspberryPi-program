@@ -5,8 +5,9 @@ from module import *
 from main import modules
 from settings import *
 from module.i2c_class import *
-from module.motor_func import *
-from module.servo_func import *
+from module import motor_func
+from module.motor_func import MotorSignal
+from module import servo_func
 import logging
 
 forth_back_motor_signal = MotorSignal()
@@ -26,18 +27,22 @@ modules.update({'motor1': motor1, 'servo1': servo1, 'servo2': servo2})
 logging.info("Initialize I2C communication to modules [OK]")
 
 def open_suicide_hand():
-    suicide_arm_servo = SUICIDE_HAND_OPEN_ANGLE
+    global suicide_hand_servo
+    suicide_hand_servo = SUICIDE_HAND_OPEN_ANGLE
     __send_servo1_signal()
 
 def close_suicide_hand():
-    suicide_arm_servo = SUICIDE_HAND_CLOSE_ANGLE
+    global suicide_hand_servo
+    suicide_hand_servo = SUICIDE_HAND_CLOSE_ANGLE
     __send_servo1_signal()
 
 def open_line_hand():
+    global line_hand_servo
     line_hand_servo = LINE_HAND_OPEN_ANGLE
     __send_servo1_signal()
 
 def close_line_hand():
+    global line_hand_servo
     line_hand_servo = LINE_HAND_CLOSE_ANGLE
     __send_servo1_signal()
 
@@ -72,22 +77,26 @@ def __is_valid_stick(stick_val):
         return True
 
 def open_air_cylinder():
+    global air_cylinder_oc_servo
     air_cylinder_oc_servo = AIR_CYLINDER_OPEN_ANGLE
     __send_servo2_signal()
 
 def close_air_cylinder():
+    global air_cylinder_oc_servo
     air_cylinder_oc_servo = AIR_CYLINDER_CLOSE_ANGLE
     __send_servo2_signal()
 
 def turn_more_air_cylinder_module(angle):
+    global air_cylinder_expand_servo
     air_cylinder_expand_servo += angle
+    air_cylinder_expand_servo = servo_func.limit(air_cylinder_expand_servo)
     __send_servo2_signal()
 
 def __send_servo1_signal():
-    modules['servo1'].write_data(line_hand_servo, suicide_hand_servo, suicide_arm_servo)
+    servo_func.move(modules['servo1'], line_hand_servo, suicide_hand_servo, suicide_arm_servo)
 
 def __send_servo2_signal():
-    modules['servo2'].write_data(air_cylinder_oc_servo, air_cylinder_expand_servo)
+    servo_func.move(modules['servo2'], air_cylinder_oc_servo, air_cylinder_expand_servo)
 
 def initialize():
     pass
