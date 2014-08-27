@@ -12,8 +12,8 @@ import logging
 
 forth_back_motor_signal = MotorSignal()
 up_down_motor_signal = MotorSignal()
-line_hand_servo = LINE_HAND_CLOSE_ANGLE
-suicide_hand_servo = SUICIDE_HAND_CLOSE_ANGLE
+line_hand_servo = LINE_HAND_RELEASE_ANGLE
+suicide_hand_servo = SUICIDE_HAND_RELEASE_ANGLE
 suicide_arm_servo = SUICIDE_ARM_RETURN_ANGLE
 air_cylinder_oc_servo = AIR_CYLINDER_CLOSE_ANGLE
 air_cylinder_expand_servo = AIR_CYLINDER_CLOSE_ANGLE
@@ -26,37 +26,43 @@ servo2 = I2CConnect( I2C_ADDRESS['SERVO2'] )
 modules.update({'motor1': motor1, 'servo1': servo1, 'servo2': servo2})
 logging.info("Initialize I2C communication to modules [OK]")
 
-def open_suicide_hand():
+''' 特攻ハンドを閉じてつかみます '''
+def catch_suicide_hand():
     global suicide_hand_servo
-    suicide_hand_servo = SUICIDE_HAND_OPEN_ANGLE
+    suicide_hand_servo = SUICIDE_HAND_CATCH_ANGLE
     __send_servo1_signal()
 
-def close_suicide_hand():
+''' 特攻ハンドを開きます '''
+def release_suicide_hand():
     global suicide_hand_servo
-    suicide_hand_servo = SUICIDE_HAND_CLOSE_ANGLE
+    suicide_hand_servo = SUICIDE_HAND_RELEASE_ANGLE
     __send_servo1_signal()
 
-def open_line_hand():
+''' 一列ハンドを閉じてつかみます '''
+def catch_line_hand():
     global line_hand_servo
-    line_hand_servo = LINE_HAND_OPEN_ANGLE
+    line_hand_servo = LINE_HAND_CATCH_ANGLE
     __send_servo1_signal()
 
-def close_line_hand():
+''' 一列ハンドを開きます '''
+def release_line_hand():
     global line_hand_servo
-    line_hand_servo = LINE_HAND_CLOSE_ANGLE
+    line_hand_servo = LINE_HAND_RELEASE_ANGLE
     __send_servo1_signal()
 
+''' 特攻アームを展開します '''
 def expand_suicide_arm():
     global suicide_arm_servo
     suicide_arm_servo = SUICIDE_ARM_EXPAND_ANGLE
     __send_servo1_signal()
 
+''' 特攻アームを収縮します '''
 def return_suicide_arm():
     global suicide_arm_servo
     suicide_arm_servo = SUICIDE_ARM_RETURN_ANGLE
     __send_servo1_signal()
 
-
+''' 一列アームを前後移動します． '''
 def act_line_arm_forth_back(stick_val):
     if __is_valid_stick(stick_val):
         forth_back_motor_signal.speed = stick_val * 255
@@ -64,8 +70,9 @@ def act_line_arm_forth_back(stick_val):
     else:
         forth_back_motor_signal.speed = 0
         forth_back_motor_signal.direction = FORWARD
-    send_motor_signal()
+    __send_motor_signal()
 
+''' 一列アームの上下移動をします '''
 def act_line_arm_up_down(stick_val):
     if __is_valid_stick(stick_val):
         up_down_motor_signal.speed = stick_val * 255
@@ -73,22 +80,29 @@ def act_line_arm_up_down(stick_val):
     else:
         up_down_motor_signal.speed = 0
         up_down_motor_signal.direction = FORWARD
-    send_motor_signal()
+    __send_motor_signal()
 
-def send_motor_signal():
+''' モータシグナルを送信します． '''
+def __send_motor_signal():
     modules['motor1'].write_data(forth_back_motor_signal.signal(), up_down_motor_signal.signal())
 
+''' スティックの傾きが遊びの範囲内かどうかを判定します．
+@param stick_val スティックの入力値
+@return True: 有効な角度, False: 遊びの範囲内(無効)
+'''
 def __is_valid_stick(stick_val):
     if stick_val > -1 * JOYSTICK_BACKLASH and stick_val < JOYSTICK_BACKLASH:
         return False
     else:
         return True
 
+''' エアシリンダを開きます '''
 def open_air_cylinder():
     global air_cylinder_oc_servo
     air_cylinder_oc_servo = AIR_CYLINDER_OPEN_ANGLE
     __send_servo2_signal()
 
+''' エアシリンダを閉じます '''
 def close_air_cylinder():
     global air_cylinder_oc_servo
     air_cylinder_oc_servo = AIR_CYLINDER_CLOSE_ANGLE
@@ -101,14 +115,28 @@ def turn_more_air_cylinder_module(angle):
     air_cylinder_expand_servo = servo_func.limit(air_cylinder_expand_servo)
     __send_servo2_signal()
 
+''' ハンド，アーム系のサーボにデータを送信します '''
 def __send_servo1_signal():
     servo_func.move(modules['servo1'], line_hand_servo, suicide_hand_servo, suicide_arm_servo)
 
 def __send_servo2_signal():
     servo_func.move(modules['servo2'], air_cylinder_oc_servo, air_cylinder_expand_servo)
 
-def initialize():
-    pass
+''' ハードウェアを初期位置にします '''
+def init_hardware():
+    global forth_back_motor_signal, up_down_motor_signal
+    global line_hand_servo, suicide_hand_servo, suicide_arm_servo
+    global air_cylinder_expand_servo, air_cylinder_oc_servo
+    forth_back_motor_signal = MotorSignal()
+    up_down_motor_signal = MotorSignal()
+    line_hand_servo = LINE_HAND_RELEASE_ANGLE
+    suicide_hand_servo = SUICIDE_HAND_RELEASE_ANGLE
+    suicide_arm_servo = SUICIDE_ARM_RETURN_ANGLE
+    air_cylinder_oc_servo = AIR_CYLINDER_CLOSE_ANGLE
+    air_cylinder_expand_servo = AIR_CYLINDER_CLOSE_ANGLE
+    __send_motor_signal()
+    __send_servo1_signal()
+    __send_servo2_signal()
 
 def retry():
     pass

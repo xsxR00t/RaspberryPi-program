@@ -44,11 +44,11 @@ def init_controller() :
 ''' ゲームパッドのボタンが押されたときのイベント処理 '''
 def pushed_event(event):
     if event.button == PAD_BUTTON['LINE_HAND_OC'] :
-        print "line hand open"
-        open_line_hand()
+        print "line hand catch"
+        catch_line_hand()
     elif event.button == PAD_BUTTON['SUICIDE_HAND_OC'] :
-        print "suicide hand open"
-        open_suicide_hand()
+        print "suicide hand catch"
+        catch_suicide_hand()
     elif event.button == PAD_BUTTON['INITIALIZE'] :
         print "initialize"
         pass
@@ -59,11 +59,11 @@ def pushed_event(event):
 ''' ゲームパッドのボタンが離されたときのイベント処理 '''
 def released_event(event):
     if event.button == PAD_BUTTON['LINE_HAND_OC'] :
-        print "line hand close"
-        close_line_hand()
+        print "line hand release"
+        release_line_hand()
     elif event.button == PAD_BUTTON['SUICIDE_HAND_OC'] :
-        print "suicide hand close"
-        close_suicide_hand()
+        print "suicide hand release"
+        release_suicide_hand()
 
 ''' ゲームパッドの十時キーのイベント処理 '''
 def hat_event(event):
@@ -102,15 +102,7 @@ def axis_event(event):
 def main():
     init_gpio()
     con = init_controller()
-
-    # I2C initialize
-    # uno = I2CConnect(ADDRESS_UNO)
-    #motor1 = I2CConnect( I2C_ADDRESS['MOTOR1'] )
-    # motor2 = i2cConnection( ADDRESS_MOTOR2, 3 )
-    #servo1 = I2CConnect( I2C_ADDRESS['SERVO1'] )
-    #servo2 = I2CConnect( I2C_ADDRESS['SERVO2'] )
-    #modules.update({'motor1': motor1, 'servo1': servo1, 'servo2': servo2})
-    #logging.info("Initialize I2C communication to modules [OK]")
+    init_hardware()
 
     # Main system loop
     while True :
