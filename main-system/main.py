@@ -22,8 +22,6 @@ from module.i2c_class import I2CConnect
 
 modules = {}
 
-modules = {}
-
 # Raspberry pi GPIO setting
 def init_gpio() :
     GPIO.setmode( GPIO.BCM )
@@ -73,11 +71,14 @@ def hat_event(event):
     x = event.value[PAD_HAT['AIR_CYLINDER_TURN']]
     y = event.value[PAD_HAT['AIR_CYLINDER_OC']]
     if x == -1:
-        print "turn air minus"
-        turn_more_air_cylinder_module(AIR_CYLINDER_MODULE_ANGLE_UNIT * -1)
+        print "suicide arm return"
+        return_suicide_arm()
+        #turn_more_air_cylinder_module(AIR_CYLINDER_MODULE_ANGLE_UNIT * -1)
     elif x == 1:
-        print "turn air plus"
-        turn_more_air_cylinder_module(AIR_CYLINDER_MODULE_ANGLE_UNIT)
+        print "suicide arm expand"
+        expand_suicide_arm()
+        #print "turn air plus"
+        #turn_more_air_cylinder_module(AIR_CYLINDER_MODULE_ANGLE_UNIT)
     else:
         pass
 

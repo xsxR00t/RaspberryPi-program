@@ -12,9 +12,9 @@ import logging
 
 forth_back_motor_signal = MotorSignal()
 up_down_motor_signal = MotorSignal()
-line_hand_servo = 90
-suicide_hand_servo = 90
-suicide_arm_servo = 90
+line_hand_servo = LINE_HAND_CLOSE_ANGLE
+suicide_hand_servo = SUICIDE_HAND_CLOSE_ANGLE
+suicide_arm_servo = SUICIDE_ARM_RETURN_ANGLE
 air_cylinder_oc_servo = AIR_CYLINDER_CLOSE_ANGLE
 air_cylinder_expand_servo = AIR_CYLINDER_CLOSE_ANGLE
 
@@ -46,8 +46,16 @@ def close_line_hand():
     line_hand_servo = LINE_HAND_CLOSE_ANGLE
     __send_servo1_signal()
 
-def turn_more_suicide_arm_angle(angle):
-    pass
+def expand_suicide_arm():
+    global suicide_arm_servo
+    suicide_arm_servo = SUICIDE_ARM_EXPAND_ANGLE
+    __send_servo1_signal()
+
+def return_suicide_arm():
+    global suicide_arm_servo
+    suicide_arm_servo = SUICIDE_ARM_RETURN_ANGLE
+    __send_servo1_signal()
+
 
 def act_line_arm_forth_back(stick_val):
     if __is_valid_stick(stick_val):
@@ -86,6 +94,7 @@ def close_air_cylinder():
     air_cylinder_oc_servo = AIR_CYLINDER_CLOSE_ANGLE
     __send_servo2_signal()
 
+# 廃止予定
 def turn_more_air_cylinder_module(angle):
     global air_cylinder_expand_servo
     air_cylinder_expand_servo += angle
