@@ -2,13 +2,13 @@
 # encoding: utf-8
 
 from module import *
-from main import modules
 from settings import *
 from module.i2c_class import *
 from module import motor_func
 from module.motor_func import MotorSignal
 from module import servo_func
 import logging
+import math
 
 # 一列アームの前後モータの値
 forth_back_motor_signal = MotorSignal()
@@ -29,7 +29,7 @@ suicide_arm_servo = SUICIDE_ARM_RETURN_ANGLE
 motor1 = I2CConnect( I2C_ADDRESS['MOTOR1'] )
 servo1 = I2CConnect( I2C_ADDRESS['SERVO1'] )
 air = I2CConnect( I2C_ADDRESS['AIR'] )
-modules.update({'motor1': motor1, 'servo1': servo1, 'air': air})
+modules = {'motor1': motor1, 'servo1': servo1, 'air': air}
 logging.info("Initialize I2C communication to modules [OK]")
 
 ''' 特攻ハンドを閉じてつかみます '''
@@ -71,21 +71,23 @@ def return_suicide_arm():
 ''' 一列アームを前後移動します． '''
 def act_line_arm_forth_back(stick_val):
     if __is_valid_stick(stick_val):
-        forth_back_motor_signal.speed = stick_val * 255
+        forth_back_motor_signal.speed = math.fabs(stick_val) * 255
         forth_back_motor_signal.direction = FORWARD if stick_val < 0 else BACKWARD
     else:
         forth_back_motor_signal.speed = 0
         forth_back_motor_signal.direction = FORWARD
+    print "fb %d, %f %d" % (forth_back_motor_signal.direction, stick_val, forth_back_motor_signal.speed)
     __send_motor_signal()
 
 ''' 一列アームの上下移動をします '''
 def act_line_arm_up_down(stick_val):
     if __is_valid_stick(stick_val):
-        up_down_motor_signal.speed = stick_val * 255
+        up_down_motor_signal.speed = math.fabs(stick_val) * 255
         up_down_motor_signal.direction = FORWARD if stick_val < 0 else BACKWARD
     else:
         up_down_motor_signal.speed = 0
         up_down_motor_signal.direction = FORWARD
+    print "up %d, %f, %d" % (up_down_motor_signal.direction, stick_val, up_down_motor_signal.speed)
     __send_motor_signal()
 
 ''' モータシグナルを送信します． '''

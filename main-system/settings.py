@@ -27,7 +27,7 @@ PAD_HAT = {
 
 ''' ゲームパッドのスティック割り当て '''
 PAD_AXIS = {
-    'LINE_ARM_BACK_FORTH': 0,
+    'LINE_ARM_BACK_FORTH': 1,
     'LINE_ARM_UP_DOWN': 3
 }
 
@@ -50,4 +50,4 @@ LINE_HAND_CATCH_ANGLE = 160
 LINE_HAND_RELEASE_ANGLE = 30
 
 ''' ジョイスティックの遊びの角度(0.0から1.0) '''
-JOYSTICK_BACKLASH = 0.2
+JOYSTICK_BACKLASH = 0.12

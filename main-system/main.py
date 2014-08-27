@@ -20,8 +20,6 @@ from module.motor_func import *
 from module.servo_func import *
 from module.i2c_class import I2CConnect
 
-modules = {}
-
 # Raspberry pi GPIO setting
 def init_gpio() :
     GPIO.setmode( GPIO.BCM )
@@ -70,11 +68,11 @@ def hat_event(event):
     print "hat event"
     x = event.value[PAD_HAT['AIR_CYLINDER_TURN']]
     y = event.value[PAD_HAT['AIR_CYLINDER_OC']]
-    if x == -1:
+    if x == -1: # 左
         print "suicide arm return"
         return_suicide_arm()
         #turn_more_air_cylinder_module(AIR_CYLINDER_MODULE_ANGLE_UNIT * -1)
-    elif x == 1:
+    elif x == 1: #右
         print "suicide arm expand"
         expand_suicide_arm()
         #print "turn air plus"
@@ -82,14 +80,13 @@ def hat_event(event):
     else:
         pass
 
-    if y == -1:
+    print "y: %s" % y
+    if y == 1: # 上，　ちなみに下は-1
         print "open air"
         open_air_cylinder()
-    elif y == 1:
+    else:
         print "close air"
         close_air_cylinder()
-    else:
-        pass
 
 ''' ゲームパッドのスティックのイベント処理 '''
 def axis_event(event):
@@ -98,11 +95,16 @@ def axis_event(event):
     elif event.axis == PAD_AXIS['LINE_ARM_UP_DOWN']:
         act_line_arm_up_down(event.value)
 
-
 def main():
     init_gpio()
     con = init_controller()
-    init_hardware()
+
+    try:
+        init_hardware()
+    except IOError as ex :
+        str = "I2C Communication Failed %s" % ex
+        #logging.error(str)
+        print str
 
     # Main system loop
     while True :
@@ -121,7 +123,7 @@ def main():
 
         except IOError as ex :
             str = "I2C Communication Failed %s" % ex
-            logging.error(str)
+            #logging.error(str)
             print str
 
         except Exception as ex:
@@ -131,3 +133,6 @@ def main():
 if __name__ == "__main__":
     #with daemon.DaemonContext(pidfile=PIDLockFile(PID_FILE)):
     main()
+
+    #GPIO 9 緊急停止スイッチ
+    # 17 27 22 #LED
