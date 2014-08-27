@@ -10,17 +10,27 @@ from module.motor_func import MotorSignal
 from module import servo_func
 import logging
 
+# 一列アームの前後モータの値
 forth_back_motor_signal = MotorSignal()
+
+# 一列アームの上下モータの値
 up_down_motor_signal = MotorSignal()
+
+# 一列ハンドのサーボ角度
 line_hand_servo = LINE_HAND_RELEASE_ANGLE
+
+# 特攻ハンドのサーボの角度
 suicide_hand_servo = SUICIDE_HAND_RELEASE_ANGLE
+
+# 特攻ハンドの展開収縮サーボ角度
 suicide_arm_servo = SUICIDE_ARM_RETURN_ANGLE
+
+# エアシリンダのサーボ角度
 air_cylinder_oc_servo = AIR_CYLINDER_CLOSE_ANGLE
 air_cylinder_expand_servo = AIR_CYLINDER_CLOSE_ANGLE
 
 # I2C initialize
 motor1 = I2CConnect( I2C_ADDRESS['MOTOR1'] )
-# motor2 = i2cConnection( ADDRESS_MOTOR2, 3 )
 servo1 = I2CConnect( I2C_ADDRESS['SERVO1'] )
 servo2 = I2CConnect( I2C_ADDRESS['SERVO2'] )
 modules.update({'motor1': motor1, 'servo1': servo1, 'servo2': servo2})
