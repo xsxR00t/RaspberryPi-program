@@ -100,7 +100,7 @@ def axis_event(event):
 
 def main():
     init_gpio()
-    GPIO.output(GPIO_INITIALIZED_LED, False)
+    GPIO.output(GPIO_INITIALIZED_LED, GPIO.LOW)
     con = init_controller()
 
     try:
@@ -110,15 +110,16 @@ def main():
         #logging.error(str)
         print str
 
-    GPIO.output(GPIO_INITIALIZED_LED, True)
+    GPIO.output(GPIO_INITIALIZED_LED, GPIO.HIGH)
 
     # Main system loop
     while True :
         time.sleep( 0.1 )
         try :
             # 緊急停止スイッチを確認
-            if GPIO.input(GPIO_EMERGENCY) is False:
-                raise EmergencyException()
+            print GPIO.input(GPIO_EMERGENCY)
+            #if GPIO.input(GPIO_EMERGENCY) == False:
+            #    raise EmergencyException()
 
             # Get controller event
             for e in pygame.event.get() :
@@ -136,6 +137,9 @@ def main():
             #logging.error(str)
             print str
 
+        except EmergencyException as ex:
+            raise ex
+
         except Exception as ex:
             logging.error(ex)
             GPIO.output(GPIO_INITIALIZED_LED, False)
@@ -149,7 +153,7 @@ if __name__ == "__main__":
         print "Emergency Exception"
         #logging.error("Emergency Exception")
         while True:
-            if GPIO.input(GPIO_EMERGENCY):
+            if GPIO.input(GPIO_EMERGENCY) == 1:
                 main()
     finally:
         GPIO.cleanup()
