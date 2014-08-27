@@ -18,12 +18,14 @@ from actions import *
 from module import *
 from module.motor_func import *
 from module.servo_func import *
+from module.exception import EmergencyException
 from module.i2c_class import I2CConnect
 
 # Raspberry pi GPIO setting
 def init_gpio() :
     GPIO.setmode( GPIO.BCM )
     GPIO.setup(GPIO_INITIALIZED_LED, GPIO.OUT)
+    GPIO.setup(GPIO_EMERGENCY, GPIO.IN)
 
 # Game pad controller initialize
 def init_controller() :
@@ -114,6 +116,10 @@ def main():
     while True :
         time.sleep( 0.1 )
         try :
+            # 緊急停止スイッチを確認
+            if GPIO.input(GPIO_EMERGENCY) is False:
+                raise EmergencyException()
+
             # Get controller event
             for e in pygame.event.get() :
                 if e.type == pygame.locals.JOYBUTTONDOWN :
@@ -137,7 +143,16 @@ def main():
 
 if __name__ == "__main__":
     #with daemon.DaemonContext(pidfile=PIDLockFile(PID_FILE)):
-    main()
+    try:
+        main()
+    except EmergencyException:
+        print "Emergency Exception"
+        #logging.error("Emergency Exception")
+        while True:
+            if GPIO.input(GPIO_EMERGENCY):
+                main()
+    finally:
+        GPIO.cleanup()
 
     #GPIO 9 緊急停止スイッチ
     # 17 27 22 #LED

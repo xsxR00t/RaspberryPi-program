@@ -50,6 +50,9 @@ LINE_HAND_RELEASE_ANGLE = 30
 ''' ジョイスティックの遊びの角度(0.0から1.0) '''
 JOYSTICK_BACKLASH = 0.12
 
+## GPIO
 ''' 初期化完了フラグLED '''
 GPIO_INITIALIZED_LED = 17
 
+''' 緊急停止スイッチのピン '''
+GPIO_EMERGENCY = 9
