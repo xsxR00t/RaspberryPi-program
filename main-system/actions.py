@@ -25,15 +25,11 @@ suicide_hand_servo = SUICIDE_HAND_RELEASE_ANGLE
 # 特攻ハンドの展開収縮サーボ角度
 suicide_arm_servo = SUICIDE_ARM_RETURN_ANGLE
 
-# エアシリンダのサーボ角度
-air_cylinder_oc_servo = AIR_CYLINDER_CLOSE_ANGLE
-air_cylinder_expand_servo = AIR_CYLINDER_CLOSE_ANGLE
-
 # I2C initialize
 motor1 = I2CConnect( I2C_ADDRESS['MOTOR1'] )
 servo1 = I2CConnect( I2C_ADDRESS['SERVO1'] )
-servo2 = I2CConnect( I2C_ADDRESS['SERVO2'] )
-modules.update({'motor1': motor1, 'servo1': servo1, 'servo2': servo2})
+air = I2CConnect( I2C_ADDRESS['AIR'] )
+modules.update({'motor1': motor1, 'servo1': servo1, 'air': air})
 logging.info("Initialize I2C communication to modules [OK]")
 
 ''' 特攻ハンドを閉じてつかみます '''
@@ -108,29 +104,15 @@ def __is_valid_stick(stick_val):
 
 ''' エアシリンダを開きます '''
 def open_air_cylinder():
-    global air_cylinder_oc_servo
-    air_cylinder_oc_servo = AIR_CYLINDER_OPEN_ANGLE
-    __send_servo2_signal()
+    modules['air'].write_data(0x01)
 
 ''' エアシリンダを閉じます '''
 def close_air_cylinder():
-    global air_cylinder_oc_servo
-    air_cylinder_oc_servo = AIR_CYLINDER_CLOSE_ANGLE
-    __send_servo2_signal()
-
-# 廃止予定
-def turn_more_air_cylinder_module(angle):
-    global air_cylinder_expand_servo
-    air_cylinder_expand_servo += angle
-    air_cylinder_expand_servo = servo_func.limit(air_cylinder_expand_servo)
-    __send_servo2_signal()
+    modules['air'].write_data(0x00)
 
 ''' ハンド，アーム系のサーボにデータを送信します '''
 def __send_servo1_signal():
     servo_func.move(modules['servo1'], line_hand_servo, suicide_hand_servo, suicide_arm_servo)
-
-def __send_servo2_signal():
-    servo_func.move(modules['servo2'], air_cylinder_oc_servo, air_cylinder_expand_servo)
 
 ''' ハードウェアを初期位置にします '''
 def init_hardware():
@@ -142,11 +124,8 @@ def init_hardware():
     line_hand_servo = LINE_HAND_RELEASE_ANGLE
     suicide_hand_servo = SUICIDE_HAND_RELEASE_ANGLE
     suicide_arm_servo = SUICIDE_ARM_RETURN_ANGLE
-    air_cylinder_oc_servo = AIR_CYLINDER_CLOSE_ANGLE
-    air_cylinder_expand_servo = AIR_CYLINDER_CLOSE_ANGLE
     __send_motor_signal()
     __send_servo1_signal()
-    __send_servo2_signal()
 
 def retry():
     pass

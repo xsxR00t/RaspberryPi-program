@@ -6,7 +6,7 @@ PID_FILE = '/var/run/catchrobot.pid'
 I2C_ADDRESS = {
     'MOTOR1': 0x10,
     'SERVO1': 0x20,
-    'SERVO2': 0x21,
+    'AIR': 0x30,
 }
 
 JOYSTICK_NUMBER = 0
@@ -30,14 +30,6 @@ PAD_AXIS = {
     'LINE_ARM_BACK_FORTH': 0,
     'LINE_ARM_UP_DOWN': 3
 }
-
-AIR_CYLINDER_MODULE_ANGLE_UNIT = 20
-
-''' エアシリンダが開いたときのサーボ角度 '''
-AIR_CYLINDER_OPEN_ANGLE = 160
-
-''' エアシリンダが閉じてるときのサーボ角度 '''
-AIR_CYLINDER_CLOSE_ANGLE = 35
 
 ''' 特攻ハンドがつかんでいるのサーボ角度 '''
 SUICIDE_HAND_CATCH_ANGLE = 160
