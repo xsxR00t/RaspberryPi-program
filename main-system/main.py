@@ -42,14 +42,14 @@ def init_controller() :
 ''' ゲームパッドのボタンが押されたときのイベント処理 '''
 def pushed_event(event):
     if event.button == PAD_BUTTON['LINE_HAND_OC'] :
-        print "line hand catch"
-        catch_line_hand()
+        print "line hand release"
+        release_line_hand()
     elif event.button == PAD_BUTTON['SUICIDE_HAND_OC'] :
-        print "suicide hand catch"
-        catch_suicide_hand()
+        print "suicide hand release"
+        release_suicide_hand()
     elif event.button == PAD_BUTTON['INITIALIZE'] :
         print "initialize"
-        pass
+        init_hardware()
     elif event.button == PAD_BUTTON['RETRY'] :
         print "retry"
         pass
@@ -57,11 +57,11 @@ def pushed_event(event):
 ''' ゲームパッドのボタンが離されたときのイベント処理 '''
 def released_event(event):
     if event.button == PAD_BUTTON['LINE_HAND_OC'] :
-        print "line hand release"
-        release_line_hand()
+        print "line hand catch"
+        catch_line_hand()
     elif event.button == PAD_BUTTON['SUICIDE_HAND_OC'] :
-        print "suicide hand release"
-        release_suicide_hand()
+        print "suicide hand catch"
+        catch_suicide_hand()
 
 ''' ゲームパッドの十時キーのイベント処理 '''
 def hat_event(event):
