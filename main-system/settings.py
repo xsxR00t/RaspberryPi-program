@@ -1,8 +1,6 @@
 #!/usr/bin/python
 # encoding: utf-8
 
-PID_FILE = '/var/run/catchrobot.pid'
-
 I2C_ADDRESS = {
     'MOTOR1': 0x10,
     'SERVO1': 0x20,
@@ -51,3 +49,7 @@ LINE_HAND_RELEASE_ANGLE = 30
 
 ''' ジョイスティックの遊びの角度(0.0から1.0) '''
 JOYSTICK_BACKLASH = 0.12
+
+''' 初期化完了フラグLED '''
+GPIO_INITIALIZED_LED = 17
+

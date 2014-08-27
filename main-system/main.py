@@ -23,6 +23,7 @@ from module.i2c_class import I2CConnect
 # Raspberry pi GPIO setting
 def init_gpio() :
     GPIO.setmode( GPIO.BCM )
+    GPIO.setup(GPIO_INITIALIZED_LED, GPIO.OUT)
 
 # Game pad controller initialize
 def init_controller() :
@@ -97,6 +98,7 @@ def axis_event(event):
 
 def main():
     init_gpio()
+    GPIO.output(GPIO_INITIALIZED_LED, False)
     con = init_controller()
 
     try:
@@ -105,6 +107,8 @@ def main():
         str = "I2C Communication Failed %s" % ex
         #logging.error(str)
         print str
+
+    GPIO.output(GPIO_INITIALIZED_LED, True)
 
     # Main system loop
     while True :
@@ -128,6 +132,7 @@ def main():
 
         except Exception as ex:
             logging.error(ex)
+            GPIO.output(GPIO_INITIALIZED_LED, False)
             raise ex
 
 if __name__ == "__main__":
