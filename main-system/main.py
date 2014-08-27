@@ -118,8 +118,8 @@ def main():
         try :
             # 緊急停止スイッチを確認
             print GPIO.input(GPIO_EMERGENCY)
-            #if GPIO.input(GPIO_EMERGENCY) == False:
-            #    raise EmergencyException()
+            if GPIO.input(GPIO_EMERGENCY) == False:
+                raise EmergencyException()
 
             # Get controller event
             for e in pygame.event.get() :
