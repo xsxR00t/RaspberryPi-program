@@ -77,7 +77,7 @@ def act_line_arm_forth_back(stick_val):
     else:
         forth_back_motor_signal.speed = 0
         forth_back_motor_signal.direction = FORWARD
-    print "fb %d, %f %d" % (forth_back_motor_signal.direction, stick_val, forth_back_motor_signal.speed)
+    print "fb %d, %d" % (forth_back_motor_signal.direction, forth_back_motor_signal.speed)
     __send_motor_signal()
 
 ''' 一列アームの上下移動をします '''
@@ -88,11 +88,12 @@ def act_line_arm_up_down(stick_val):
     else:
         up_down_motor_signal.speed = 0
         up_down_motor_signal.direction = FORWARD
-    print "up %d, %f, %d" % (up_down_motor_signal.direction, stick_val, up_down_motor_signal.speed)
+    print "up %d, %d" % (up_down_motor_signal.direction, up_down_motor_signal.speed)
     __send_motor_signal()
 
 ''' モータシグナルを送信します． '''
 def __send_motor_signal():
+    global  forth_back_motor_signal, up_down_motor_signal
     modules['motor1'].write_data(forth_back_motor_signal.signal(), up_down_motor_signal.signal())
 
 ''' スティックの傾きが遊びの範囲内かどうかを判定します．

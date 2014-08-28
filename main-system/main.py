@@ -117,7 +117,7 @@ def main():
         time.sleep( 0.1 )
         try :
             # 緊急停止スイッチを確認
-            print is_emergency()
+            #print is_emergency()
             if is_emergency():
                 raise EmergencyException()
 

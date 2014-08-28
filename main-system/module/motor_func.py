@@ -19,7 +19,7 @@ class MotorSignal:
     @return 8bitに信号をまとめた値
     '''
     def signal(self):
-        return (int(self.speed) / 2) << 2 | 0b1 if self.direction == BACKWARD else 0b0
+        return (int(self.speed) / 2) << 2 | (0b1 if self.direction == BACKWARD else 0b0)
 
     def __limit(self):
         '''  '''
