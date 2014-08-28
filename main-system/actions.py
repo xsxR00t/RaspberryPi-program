@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # encoding: utf-8
 
+import RPi.GPIO as GPIO
 from module import *
 from settings import *
 from module.i2c_class import *
@@ -128,6 +129,13 @@ def init_hardware():
     suicide_arm_servo = SUICIDE_ARM_RETURN_ANGLE
     __send_motor_signal()
     __send_servo1_signal()
+    modules['air'].write_data(0x00)
 
 def retry():
     pass
+
+''' 緊急事態停止ボタンが押されているかどうかを取得します．
+@return True: 平常, False: 緊急事態
+'''
+def is_emergency():
+    return not GPIO.input(GPIO_EMERGENCY)

@@ -117,8 +117,8 @@ def main():
         time.sleep( 0.1 )
         try :
             # 緊急停止スイッチを確認
-            print GPIO.input(GPIO_EMERGENCY)
-            if GPIO.input(GPIO_EMERGENCY) == False:
+            print is_emergency()
+            if is_emergency():
                 raise EmergencyException()
 
             # Get controller event
@@ -153,7 +153,8 @@ if __name__ == "__main__":
         print "Emergency Exception"
         #logging.error("Emergency Exception")
         while True:
-            if GPIO.input(GPIO_EMERGENCY) == 1:
+            time.sleep(0.1)
+            if is_emergency() is False:
                 main()
     finally:
         GPIO.cleanup()
