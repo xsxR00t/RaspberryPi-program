@@ -114,6 +114,14 @@ def open_air_cylinder():
 def close_air_cylinder():
     modules['air'].write_data(0x00)
 
+''' GPIOピンのエアシリンダを開きます． '''
+def open_air_cylinder_gpio():
+    GPIO.output(GPIO_AIR_CYLINDER, GPIO.HIGH)
+
+''' GPIOピンのエアシリンダを閉じます． '''
+def close_air_cylinder_gpio():
+    GPIO.output(GPIO_AIR_CYLINDER, GPIO.LOW)
+
 ''' ハンド，アーム系のサーボにデータを送信します '''
 def __send_servo1_signal():
     servo_func.move(modules['servo1'], line_hand_servo, suicide_hand_servo, suicide_arm_servo)

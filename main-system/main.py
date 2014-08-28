@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
-# @author: Katsuya Yamaguchi
+# @author: Katsuya Yamaguchi, Hirokazu Yokoyama
 
 from daemon import daemon
 from daemon.pidlockfile import PIDLockFile
@@ -26,6 +26,7 @@ def init_gpio() :
     GPIO.setmode( GPIO.BCM )
     GPIO.setup(GPIO_INITIALIZED_LED, GPIO.OUT)
     GPIO.setup(GPIO_EMERGENCY, GPIO.IN)
+    GPIO.setup(GPIO_AIR_CYLINDER, GPIO.OUT)
 
 # Game pad controller initialize
 def init_controller() :
@@ -86,9 +87,11 @@ def hat_event(event):
     print "y: %s" % y
     if y == 1: # 上，　ちなみに下は-1
         print "open air"
+        open_air_cylinder_gpio()
         open_air_cylinder()
     else:
         print "close air"
+        close_air_cylinder_gpio()
         close_air_cylinder()
 
 ''' ゲームパッドのスティックのイベント処理 '''
