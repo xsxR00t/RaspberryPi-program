@@ -88,11 +88,11 @@ def hat_event(event):
     if y == 1: # 上，　ちなみに下は-1
         print "open air"
         open_air_cylinder_gpio()
-        open_air_cylinder()
+        #open_air_cylinder()
     else:
         print "close air"
         close_air_cylinder_gpio()
-        close_air_cylinder()
+        #close_air_cylinder()
 
 ''' ゲームパッドのスティックのイベント処理 '''
 def axis_event(event):
