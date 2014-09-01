@@ -106,7 +106,7 @@ def __is_valid_stick(stick_val):
         return True
 
 ''' エアシリンダを開きます '''
-def open_air_cylinder():
+def open_air_cylinder():，
     modules['air'].write_data(0x01)
 
 ''' エアシリンダを閉じます '''

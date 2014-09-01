@@ -19,8 +19,8 @@ PAD_BUTTON = {
 
 ''' ゲームパッドの十字キー割り当て '''
 PAD_HAT = {
-    'AIR_CYLINDER_TURN': 0,
-    'AIR_CYLINDER_OC': 1,
+    'AIR_CYLINDER_TURN': 1,
+    'AIR_CYLINDER_OC': 0,
 }
 
 ''' ゲームパッドのスティック割り当て '''
