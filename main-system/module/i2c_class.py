@@ -17,7 +17,7 @@ class I2CConnect :
     @param *data 送信するデータ
     '''
     def write_data( self, *data ) :
-        self.bus.write_i2c_block_data( self.address, data[0], list(data[0:]) )
+        self.bus.write_i2c_block_data( self.address, data[0], list(data[1:]) )
         #self.bus.write_byte(self.address, data[0])
         print "Write! %s" % str(data)
 
