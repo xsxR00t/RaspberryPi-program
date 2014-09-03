@@ -15,12 +15,6 @@ import sys
 # User program
 import module
 
-from settings import *
-from module import *
-from module.motor_func import *
-from module.servo_func import *
-from module.exception import EmergencyException
-from module.i2c_class import I2CConnect
 
 # Raspberry pi GPIO setting
 def init_gpio() :
@@ -36,7 +30,9 @@ def init_controller() :
         joys = pygame.joystick.Joystick(JOYSTICK_NUMBER)
         joys.init()
         pygame.init()
-        print "Controller initialized"
+        str =  "Controller initialized"
+        print str
+        logging.info(str)
         return joys
     except pygame.error :
         str = "Not found controller"
@@ -157,6 +153,12 @@ if __name__ == "__main__":
         #if True:
             logging.basicConfig(level=logging.DEBUG, filename='/var/log/carobot.log', format='[%(levelname)s] %(asctime)s: %(message)s')
             from actions import *
+            from settings import *
+            from module import *
+            from module.motor_func import *
+            from module.servo_func import *
+            from module.exception import EmergencyException
+            from module.i2c_class import I2CConnect
 
             try:
                 logging.info("catch robot system launched")
