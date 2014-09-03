@@ -133,8 +133,8 @@ def init_hardware():
     global air_cylinder_expand_servo, air_cylinder_oc_servo
     forth_back_motor_signal = MotorSignal()
     up_down_motor_signal = MotorSignal()
-    line_hand_servo = LINE_HAND_RELEASE_ANGLE
-    suicide_hand_servo = SUICIDE_HAND_RELEASE_ANGLE
+    line_hand_servo = LINE_HAND_CATCH_ANGLE
+    suicide_hand_servo = SUICIDE_HAND_CATCH_ANGLE
     suicide_arm_servo = SUICIDE_ARM_RETURN_ANGLE
     __send_motor_signal()
     __send_servo1_signal()
