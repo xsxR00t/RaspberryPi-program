@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/python
 # -*- coding: utf-8 -*-
 # @author: Katsuya Yamaguchi, Hirokazu Yokoyama
 
@@ -10,11 +10,12 @@ import RPi.GPIO as GPIO
 import smbus
 import time
 import logging
+import sys
 
 # User program
 import module
+
 from settings import *
-from actions import *
 from module import *
 from module.motor_func import *
 from module.servo_func import *
@@ -41,7 +42,7 @@ def init_controller() :
         str = "Not found controller"
         print str
         logging.error(str)
-        quit()
+        #quit()
 
 ''' ゲームパッドのボタンが押されたときのイベント処理 '''
 def pushed_event(event):
@@ -102,6 +103,7 @@ def axis_event(event):
         act_line_arm_up_down(event.value)
 
 def main():
+    logging.info("start up catch robot system")
     init_gpio()
     GPIO.output(GPIO_INITIALIZED_LED, GPIO.LOW)
     con = init_controller()
@@ -110,10 +112,11 @@ def main():
         init_hardware()
     except IOError as ex :
         str = "I2C Communication Failed %s" % ex
-        #logging.error(str)
+        logging.error(str)
         print str
 
     GPIO.output(GPIO_INITIALIZED_LED, GPIO.HIGH)
+    logging.info("catch robot system initialized")
 
     # Main system loop
     while True :
@@ -137,7 +140,7 @@ def main():
 
         except IOError as ex :
             str = "I2C Communication Failed %s" % ex
-            #logging.error(str)
+            logging.error(str)
             print str
 
         except EmergencyException as ex:
@@ -149,18 +152,27 @@ def main():
             raise ex
 
 if __name__ == "__main__":
-    #with daemon.DaemonContext(pidfile=PIDLockFile(PID_FILE)):
     try:
-        main()
-    except EmergencyException:
-        print "Emergency Exception"
-        #logging.error("Emergency Exception")
-        while True:
-            time.sleep(0.1)
-            if is_emergency() is False:
-                main()
-    finally:
-        GPIO.cleanup()
+        with daemon.DaemonContext(pidfile=PIDLockFile('/var/run/carobot.py.pid')):
+        #if True:
+            logging.basicConfig(level=logging.DEBUG, filename='/var/log/carobot.log', format='[%(levelname)s] %(asctime)s: %(message)s')
+            from actions import *
 
+            try:
+                logging.info("catch robot system launched")
+                main()
+            except EmergencyException:
+                print "Emergency Exception"
+                logging.error("Emergency Exception")
+                while True:
+                    time.sleep(0.1)
+                    logging.error("Emergency Check")
+                    if is_emergency() is False:
+                     main()
+            finally:
+                GPIO.output(GPIO_INITIALIZED_LED, GPIO.LOW)
+                GPIO.cleanup()
+    except Exception as ex:
+        logging.error(ex)
     #GPIO 9 緊急停止スイッチ
     # 17 27 22 #LED

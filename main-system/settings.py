@@ -58,3 +58,5 @@ GPIO_INITIALIZED_LED = 17
 GPIO_EMERGENCY = 9
 
 GPIO_AIR_CYLINDER = 25
+
+PID_FILE = '/var/run/catchrobot.py.pid'
